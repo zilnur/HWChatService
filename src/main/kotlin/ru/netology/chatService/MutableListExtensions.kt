@@ -43,3 +43,21 @@ public fun MutableList<Chat>.deleteMessage(messageId: Int): Boolean {
         throw NoEntityException("Не найден чат с таким ID")
     }
 }
+
+public fun <E> MutableList<E>.removeWithCheck(filter: (E) -> Boolean):Boolean {
+    return if (this.removeIf(filter)) true else throw NoEntityException("Чат с указзанным ID не найден")
+}
+
+public fun <E> MutableList<E>.addAndReturnAddedValue(value: E): E {
+    this.add(value)
+    return value
+}
+
+public fun <E, V> MutableList<E>.getFirstOrAdd(predicate: (E) -> Boolean, newValue: V, add: (V) -> E): E {
+    val index = this.indexOfFirst(predicate)
+    return if (index != -1) {
+        this[index]
+    } else {
+        add(newValue)
+    }
+}

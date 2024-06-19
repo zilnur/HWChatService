@@ -6,6 +6,7 @@ import ru.netology.chatService.Chat
 import ru.netology.chatService.ChatService
 import ru.netology.chatService.Message
 import ru.netology.chatService.NoEntityException
+import java.util.Stack
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -130,7 +131,7 @@ class ChatServiceTest {
     @Test
     fun addChat() {
         val message = Message(0,1,"111", false)
-        val chat = Chat(4, mutableListOf(message))
+        val chat = Chat(4, mutableListOf())
         assertEquals(chat, ChatService.addChat(message))
     }
 

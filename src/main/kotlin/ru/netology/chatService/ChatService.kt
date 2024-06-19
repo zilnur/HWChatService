@@ -19,15 +19,10 @@ object ChatService {
         .readAll()
         .listOfMessages()
 
-    fun createNewMessageInChat(chatId: Int, message: Message): Message {
-        val index = chats.indexOfFirst { it.id == chatId }
-        if (index != -1) {
-            chats[index].messages.add(message)
-        } else {
-            addChat(message)
-        }
-        return message
-    }
+    fun createNewMessageInChat(chatId: Int, message: Message) = chats
+        .getFirstOrAdd(predicate = {it.id == chatId}, newValue = message, add = { addChat(message)})
+            .messages.addAndReturnAddedValue(message)
+
 
     fun deleteMessageinChat(chatID: Int, messageId: Int) = chats
         .noEmptyFilter { it.id == chatID }
@@ -37,14 +32,11 @@ object ChatService {
     fun addChat(message: Message): Chat {
         chatId += 1
         val chat = Chat(chatId, mutableListOf())
-        chat.messages.add(message)
         chats.add(chat)
         return chat
     }
 
-    fun removeChat(id: Int):Boolean {
-        return if (chats.removeIf { it.id == id }) true else throw NoEntityException("Чат с указзанным ID не найден")
-    }
+    fun removeChat(id: Int) = chats.removeWithCheck { it.id == id }
 
     fun clear() {
         chats.clear()
